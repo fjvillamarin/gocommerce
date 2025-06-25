@@ -1,0 +1,119 @@
+package templates
+
+import (
+	"fmt"
+	"gocommerce/models"
+)
+
+templ ProductCard(product models.Product) {
+	<div class="bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden group">
+		<div class="aspect-square bg-gray-100 relative overflow-hidden">
+			<img src={ product.Image } alt={ product.Name } class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"/>
+			<div class="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
+		</div>
+		<div class="p-6">
+			<h4 class="font-semibold text-gray-900 text-lg mb-2">{ product.Name }</h4>
+			<p class="text-gray-500 text-sm mb-4 line-clamp-2">{ product.Description }</p>
+			<div class="flex items-center justify-between">
+				<div>
+					<span class="text-2xl font-bold text-gray-900">${ fmt.Sprintf("%.0f", product.Price) }</span>
+					<span class="text-sm text-gray-400 line-through ml-2">${ fmt.Sprintf("%.0f", product.Price * 1.2) }</span>
+				</div>
+				<a href={ templ.SafeURL(fmt.Sprintf("/product/%d", product.ID)) } class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200 text-sm font-medium">
+					View Details
+				</a>
+			</div>
+		</div>
+	</div>
+}
+
+templ CartItemComponent(item models.CartItem, index int) {
+	<div class="bg-white rounded-lg shadow-sm p-6" id={ fmt.Sprintf("cart-item-%d", index) }>
+		<div class="flex items-center space-x-4">
+			<div class="w-20 h-20 bg-gray-100 rounded-lg overflow-hidden">
+				<img src={ item.Product.Image } alt={ item.Product.Name } class="w-full h-full object-cover"/>
+			</div>
+			<div class="flex-1">
+				<h3 class="font-semibold text-gray-900">{ item.Product.Name }</h3>
+				<p class="text-gray-600 text-sm">Color: { item.Color }, Size: { item.Size }</p>
+				<p class="text-lg font-bold text-gray-900 mt-1">${ fmt.Sprintf("%.0f", item.Product.Price) }</p>
+			</div>
+			<div class="flex items-center space-x-2">
+				<button 
+					class="w-8 h-8 border rounded flex items-center justify-center hover:bg-gray-50"
+					hx-patch={ fmt.Sprintf("/cart/item/%d/decrease", item.Product.ID) }
+					hx-trigger="click"
+					hx-target="#cart-content"
+					hx-swap="innerHTML"
+					hx-include="#cart-page"
+				>-</button>
+				<span class="w-12 text-center">{ fmt.Sprintf("%d", item.Quantity) }</span>
+				<button 
+					class="w-8 h-8 border rounded flex items-center justify-center hover:bg-gray-50"
+					hx-patch={ fmt.Sprintf("/cart/item/%d/increase", item.Product.ID) }
+					hx-trigger="click"
+					hx-target="#cart-content"
+					hx-swap="innerHTML"
+					hx-include="#cart-page"
+				>+</button>
+			</div>
+			<button 
+				class="text-red-600 hover:text-red-700"
+				hx-delete={ fmt.Sprintf("/cart/item/%d", item.Product.ID) }
+				hx-trigger="click"
+				hx-target="#cart-content"
+				hx-swap="innerHTML"
+				hx-include="#cart-page"
+			>
+				<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+				</svg>
+			</button>
+		</div>
+	</div>
+}
+
+templ OrderSummary(cart models.Cart) {
+	<div class="bg-white rounded-lg shadow-sm p-6 h-fit" id="order-summary">
+		<h3 class="text-xl font-bold text-gray-900 mb-6">Order Summary</h3>
+		
+		<div class="space-y-4">
+			<div class="flex justify-between">
+				<span class="text-gray-600">Subtotal</span>
+				<span class="text-gray-900">${ fmt.Sprintf("%.0f", cart.GetTotal()) }</span>
+			</div>
+			<div class="flex justify-between">
+				<span class="text-gray-600">Shipping</span>
+				<span class="text-green-600">Free</span>
+			</div>
+			<div class="flex justify-between">
+				<span class="text-gray-600">Tax</span>
+				<span class="text-gray-900">${ fmt.Sprintf("%.0f", cart.GetTotal()*0.08) }</span>
+			</div>
+			<div class="border-t pt-4">
+				<div class="flex justify-between text-lg font-bold">
+					<span>Total</span>
+					<span>${ fmt.Sprintf("%.0f", cart.GetTotal()*1.08) }</span>
+				</div>
+			</div>
+		</div>
+
+		<div class="mt-6 space-y-3">
+			<a href="/checkout" class="block w-full bg-blue-600 text-white text-center px-6 py-3 rounded-lg hover:bg-blue-700 font-medium transition-colors shadow-sm hover:shadow-md">
+				Proceed to Checkout
+			</a>
+			<a href="/" class="block w-full border border-gray-300 text-gray-700 text-center px-6 py-3 rounded-lg hover:bg-gray-50 font-medium transition-colors">
+				Continue Shopping
+			</a>
+		</div>
+
+		<div class="mt-6 text-center">
+			<div class="flex items-center justify-center space-x-2 text-sm text-gray-600">
+				<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+				</svg>
+				<span>Secure checkout</span>
+			</div>
+		</div>
+	</div>
+}

@@ -1,0 +1,173 @@
+package templates
+
+import (
+	"fmt"
+	"gocommerce/models"
+)
+
+templ Checkout(cart models.Cart) {
+	@Layout("Checkout") {
+		@Navigation(cart.GetItemCount())
+		
+		// Checkout Progress
+		<div class="max-w-4xl mx-auto px-6 py-8">
+			<div class="flex items-center justify-center mb-8" x-data="{ step: 1 }">
+				<div class="flex items-center space-x-4">
+					<div class="flex items-center">
+						<div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium" 
+							:class="step >= 1 ? 'bg-blue-600 text-white' : 'bg-gray-300 text-gray-600'">1</div>
+						<span class="ml-2 text-sm font-medium" :class="step >= 1 ? 'text-blue-600' : 'text-gray-600'">Shipping</span>
+					</div>
+					<div class="w-16 h-0.5 bg-gray-300"></div>
+					<div class="flex items-center">
+						<div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium"
+							:class="step >= 2 ? 'bg-blue-600 text-white' : 'bg-gray-300 text-gray-600'">2</div>
+						<span class="ml-2 text-sm font-medium" :class="step >= 2 ? 'text-blue-600' : 'text-gray-600'">Payment</span>
+					</div>
+					<div class="w-16 h-0.5 bg-gray-300"></div>
+					<div class="flex items-center">
+						<div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium"
+							:class="step >= 3 ? 'bg-blue-600 text-white' : 'bg-gray-300 text-gray-600'">3</div>
+						<span class="ml-2 text-sm font-medium" :class="step >= 3 ? 'text-blue-600' : 'text-gray-600'">Review</span>
+					</div>
+				</div>
+			</div>
+
+			<div class="grid grid-cols-3 gap-8">
+				// Checkout Form
+				<div class="col-span-2 space-y-8">
+					// Shipping Information
+					<div class="bg-white rounded-lg shadow-sm p-6">
+						<h3 class="text-xl font-bold text-gray-900 mb-6">Shipping Information</h3>
+						<form class="space-y-4">
+							<div class="grid grid-cols-2 gap-4">
+								<div>
+									<label class="block text-sm font-medium text-gray-700 mb-2">First Name</label>
+									<input type="text" class="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent"/>
+								</div>
+								<div>
+									<label class="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
+									<input type="text" class="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent"/>
+								</div>
+							</div>
+							<div>
+								<label class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+								<input type="email" class="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent"/>
+							</div>
+							<div>
+								<label class="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+								<input type="tel" class="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent"/>
+							</div>
+							<div>
+								<label class="block text-sm font-medium text-gray-700 mb-2">Address</label>
+								<input type="text" class="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent"/>
+							</div>
+							<div class="grid grid-cols-3 gap-4">
+								<div>
+									<label class="block text-sm font-medium text-gray-700 mb-2">City</label>
+									<input type="text" class="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent"/>
+								</div>
+								<div>
+									<label class="block text-sm font-medium text-gray-700 mb-2">State</label>
+									<select class="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+										<option>Select State</option>
+										<option>California</option>
+										<option>New York</option>
+										<option>Texas</option>
+									</select>
+								</div>
+								<div>
+									<label class="block text-sm font-medium text-gray-700 mb-2">ZIP Code</label>
+									<input type="text" class="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent"/>
+								</div>
+							</div>
+						</form>
+					</div>
+
+					// Payment Information
+					<div class="bg-white rounded-lg shadow-sm p-6">
+						<h3 class="text-xl font-bold text-gray-900 mb-6">Payment Information</h3>
+						<form class="space-y-4">
+							<div>
+								<label class="block text-sm font-medium text-gray-700 mb-2">Card Number</label>
+								<input type="text" placeholder="1234 5678 9012 3456" class="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent"/>
+							</div>
+							<div class="grid grid-cols-2 gap-4">
+								<div>
+									<label class="block text-sm font-medium text-gray-700 mb-2">Expiry Date</label>
+									<input type="text" placeholder="MM/YY" class="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent"/>
+								</div>
+								<div>
+									<label class="block text-sm font-medium text-gray-700 mb-2">CVV</label>
+									<input type="text" placeholder="123" class="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent"/>
+								</div>
+							</div>
+							<div>
+								<label class="block text-sm font-medium text-gray-700 mb-2">Cardholder Name</label>
+								<input type="text" class="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent"/>
+							</div>
+						</form>
+
+						<div class="mt-6 flex items-center space-x-4">
+							<img src="https://img.icons8.com/color/48/000000/visa.png" alt="Visa" class="h-8"/>
+							<img src="https://img.icons8.com/color/48/000000/mastercard.png" alt="Mastercard" class="h-8"/>
+							<img src="https://img.icons8.com/color/48/000000/amex.png" alt="American Express" class="h-8"/>
+						</div>
+					</div>
+				</div>
+
+				// Order Summary
+				<div class="bg-white rounded-lg shadow-sm p-6 h-fit">
+					<h3 class="text-xl font-bold text-gray-900 mb-6">Order Summary</h3>
+					
+					// Order Items
+					<div class="space-y-4 mb-6">
+						for _, item := range cart.Items {
+							<div class="flex items-center space-x-3">
+								<div class="w-12 h-12 bg-gray-100 rounded overflow-hidden">
+									<img src={ item.Product.Image } alt={ item.Product.Name } class="w-full h-full object-cover"/>
+								</div>
+								<div class="flex-1">
+									<h4 class="font-medium text-gray-900">{ item.Product.Name }</h4>
+									<p class="text-sm text-gray-600">Qty: { fmt.Sprintf("%d", item.Quantity) }</p>
+								</div>
+								<span class="font-medium">${ fmt.Sprintf("%.0f", item.Product.Price * float64(item.Quantity)) }</span>
+							</div>
+						}
+					</div>
+
+					// Pricing
+					<div class="space-y-3 border-t pt-4">
+						<div class="flex justify-between">
+							<span class="text-gray-600">Subtotal</span>
+							<span class="text-gray-900">${ fmt.Sprintf("%.0f", cart.GetTotal()) }</span>
+						</div>
+						<div class="flex justify-between">
+							<span class="text-gray-600">Shipping</span>
+							<span class="text-green-600">Free</span>
+						</div>
+						<div class="flex justify-between">
+							<span class="text-gray-600">Tax</span>
+							<span class="text-gray-900">${ fmt.Sprintf("%.0f", cart.GetTotal()*0.08) }</span>
+						</div>
+						<div class="border-t pt-3">
+							<div class="flex justify-between text-lg font-bold">
+								<span>Total</span>
+								<span>${ fmt.Sprintf("%.0f", cart.GetTotal()*1.08) }</span>
+							</div>
+						</div>
+					</div>
+
+					<button class="btn-primary w-full mt-6">Complete Order</button>
+
+					<div class="mt-4 flex items-center justify-center space-x-2 text-sm text-gray-600">
+						<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+						</svg>
+						<span>SSL Encrypted Checkout</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	}
+}

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Store - Premium Products</title>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm border-b">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-8">
+                    <h1 class="text-2xl font-bold text-gray-900">Modern Store</h1>
+                    <div class="hidden md:flex space-x-6">
+                        <a href="index.html" class="nav-link">Products</a>
+                        <a href="#" class="nav-link">Categories</a>
+                        <a href="#" class="nav-link">About</a>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="cart.html" class="nav-link flex items-center">
+                        <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-1.5 6M7 13l-1.5 6m0 0h9"/>
+                        </svg>
+                        Cart (2)
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="bg-gradient-to-r from-blue-600 to-blue-700 text-white py-16">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <h2 class="text-4xl font-bold mb-4">Discover Premium Products</h2>
+            <p class="text-xl text-blue-100 max-w-2xl mx-auto">Carefully curated collection of high-quality items for modern living</p>
+        </div>
+    </section>
+
+    <!-- Products Grid -->
+    <section class="max-w-7xl mx-auto px-6 py-12">
+        <div class="flex items-center justify-between mb-8">
+            <h3 class="text-2xl font-bold text-gray-900">Featured Products</h3>
+            <div class="flex items-center space-x-4">
+                <select class="border rounded-lg px-4 py-2 text-gray-700">
+                    <option>Sort by: Featured</option>
+                    <option>Price: Low to High</option>
+                    <option>Price: High to Low</option>
+                    <option>Newest</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-4 gap-8">
+            <!-- Product 1 -->
+            <div class="product-card">
+                <div class="aspect-square bg-gray-100">
+                    <img src="https://images.pexels.com/photos/267394/pexels-photo-267394.jpeg?auto=compress&cs=tinysrgb&w=400" 
+                         alt="Minimal Watch" class="w-full h-full object-cover">
+                </div>
+                <div class="p-6">
+                    <h4 class="font-semibold text-gray-900 mb-2">Minimal Watch</h4>
+                    <p class="text-gray-600 text-sm mb-3">Elegant timepiece with clean design</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xl font-bold text-gray-900">$299</span>
+                        <a href="product.html" class="text-blue-600 hover:text-blue-700 font-medium">View Details</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 2 -->
+            <div class="product-card">
+                <div class="aspect-square bg-gray-100">
+                    <img src="https://images.pexels.com/photos/335257/pexels-photo-335257.jpeg?auto=compress&cs=tinysrgb&w=400" 
+                         alt="Leather Bag" class="w-full h-full object-cover">
+                </div>
+                <div class="p-6">
+                    <h4 class="font-semibold text-gray-900 mb-2">Leather Bag</h4>
+                    <p class="text-gray-600 text-sm mb-3">Premium leather craftsmanship</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xl font-bold text-gray-900">$189</span>
+                        <a href="product.html" class="text-blue-600 hover:text-blue-700 font-medium">View Details</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 3 -->
+            <div class="product-card">
+                <div class="aspect-square bg-gray-100">
+                    <img src="https://images.pexels.com/photos/1029896/pexels-photo-1029896.jpeg?auto=compress&cs=tinysrgb&w=400" 
+                         alt="Wireless Headphones" class="w-full h-full object-cover">
+                </div>
+                <div class="p-6">
+                    <h4 class="font-semibold text-gray-900 mb-2">Wireless Headphones</h4>
+                    <p class="text-gray-600 text-sm mb-3">Crystal clear audio experience</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xl font-bold text-gray-900">$149</span>
+                        <a href="product.html" class="text-blue-600 hover:text-blue-700 font-medium">View Details</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 4 -->
+            <div class="product-card">
+                <div class="aspect-square bg-gray-100">
+                    <img src="https://images.pexels.com/photos/341523/pexels-photo-341523.jpeg?auto=compress&cs=tinysrgb&w=400" 
+                         alt="Ceramic Mug" class="w-full h-full object-cover">
+                </div>
+                <div class="p-6">
+                    <h4 class="font-semibold text-gray-900 mb-2">Ceramic Mug</h4>
+                    <p class="text-gray-600 text-sm mb-3">Handcrafted ceramic design</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xl font-bold text-gray-900">$39</span>
+                        <a href="product.html" class="text-blue-600 hover:text-blue-700 font-medium">View Details</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 5 -->
+            <div class="product-card">
+                <div class="aspect-square bg-gray-100">
+                    <img src="https://images.pexels.com/photos/1649771/pexels-photo-1649771.jpeg?auto=compress&cs=tinysrgb&w=400" 
+                         alt="Plant Pot" class="w-full h-full object-cover">
+                </div>
+                <div class="p-6">
+                    <h4 class="font-semibold text-gray-900 mb-2">Modern Plant Pot</h4>
+                    <p class="text-gray-600 text-sm mb-3">Stylish home decoration</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xl font-bold text-gray-900">$59</span>
+                        <a href="product.html" class="text-blue-600 hover:text-blue-700 font-medium">View Details</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 6 -->
+            <div class="product-card">
+                <div class="aspect-square bg-gray-100">
+                    <img src="https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg?auto=compress&cs=tinysrgb&w=400" 
+                         alt="Notebook" class="w-full h-full object-cover">
+                </div>
+                <div class="p-6">
+                    <h4 class="font-semibold text-gray-900 mb-2">Premium Notebook</h4>
+                    <p class="text-gray-600 text-sm mb-3">High-quality paper and binding</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xl font-bold text-gray-900">$29</span>
+                        <a href="product.html" class="text-blue-600 hover:text-blue-700 font-medium">View Details</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 7 -->
+            <div class="product-card">
+                <div class="aspect-square bg-gray-100">
+                    <img src="https://images.pexels.com/photos/1407354/pexels-photo-1407354.jpeg?auto=compress&cs=tinysrgb&w=400" 
+                         alt="Glasses" class="w-full h-full object-cover">
+                </div>
+                <div class="p-6">
+                    <h4 class="font-semibold text-gray-900 mb-2">Designer Glasses</h4>
+                    <p class="text-gray-600 text-sm mb-3">Modern frame design</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xl font-bold text-gray-900">$199</span>
+                        <a href="product.html" class="text-blue-600 hover:text-blue-700 font-medium">View Details</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 8 -->
+            <div class="product-card">
+                <div class="aspect-square bg-gray-100">
+                    <img src="https://images.pexels.com/photos/1464625/pexels-photo-1464625.jpeg?auto=compress&cs=tinysrgb&w=400" 
+                         alt="Candle" class="w-full h-full object-cover">
+                </div>
+                <div class="p-6">
+                    <h4 class="font-semibold text-gray-900 mb-2">Scented Candle</h4>
+                    <p class="text-gray-600 text-sm mb-3">Natural soy wax blend</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xl font-bold text-gray-900">$45</span>
+                        <a href="product.html" class="text-blue-600 hover:text-blue-700 font-medium">View Details</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12 mt-16">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-4 gap-8">
+                <div>
+                    <h5 class="font-bold mb-4">Modern Store</h5>
+                    <p class="text-gray-400">Premium products for modern living</p>
+                </div>
+                <div>
+                    <h6 class="font-semibold mb-4">Products</h6>
+                    <ul class="space-y-2 text-gray-400">
+                        <li>Electronics</li>
+                        <li>Fashion</li>
+                        <li>Home & Garden</li>
+                    </ul>
+                </div>
+                <div>
+                    <h6 class="font-semibold mb-4">Support</h6>
+                    <ul class="space-y-2 text-gray-400">
+                        <li>Contact Us</li>
+                        <li>FAQ</li>
+                        <li>Returns</li>
+                    </ul>
+                </div>
+                <div>
+                    <h6 class="font-semibold mb-4">Company</h6>
+                    <ul class="space-y-2 text-gray-400">
+                        <li>About</li>
+                        <li>Privacy Policy</li>
+                        <li>Terms</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

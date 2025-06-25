@@ -1,0 +1,49 @@
+package templates
+
+import (
+	"gocommerce/models"
+)
+
+templ Cart(cart models.Cart) {
+	@Layout("Shopping Cart") {
+		@Navigation(cart.GetItemCount())
+		
+		// Cart Content
+		<div class="max-w-6xl mx-auto px-6 py-8">
+			<h2 class="text-3xl font-bold text-gray-900 mb-8">Shopping Cart</h2>
+
+			<div class="grid grid-cols-3 gap-8" id="cart-page">
+				// Cart Items
+				<div class="col-span-2">
+					<div id="cart-content">
+						@CartContent(cart)
+					</div>
+				</div>
+
+				// Order Summary
+				<div id="order-summary-wrapper">
+					@OrderSummary(cart)
+				</div>
+			</div>
+		</div>
+	}
+}
+
+templ CartContent(cart models.Cart) {
+	<div class="space-y-6">
+		if len(cart.Items) == 0 {
+			<div class="bg-white rounded-lg shadow-sm p-12 text-center">
+				<svg class="w-24 h-24 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-1.5 6M7 13l-1.5 6m0 0h9"></path>
+				</svg>
+				<h3 class="text-xl font-semibold text-gray-900 mb-2">Your cart is empty</h3>
+				<p class="text-gray-600 mb-6">Add some products to your cart to get started</p>
+				<a href="/" class="btn-primary">Continue Shopping</a>
+			</div>
+		} else {
+			for i, item := range cart.Items {
+				@CartItemComponent(item, i)
+			}
+		}
+	</div>
+}
