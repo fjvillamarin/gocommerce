@@ -27,6 +27,40 @@ templ Layout(title string) {
 					}
 				}
 			</script>
+			// Session management
+			<script>
+				// Function to generate UUID
+				function generateUUID() {
+					return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+						var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+						return v.toString(16);
+					});
+				}
+				
+				// Function to get or create session ID
+				function getSessionId() {
+					let sessionId = document.cookie.split('; ').find(row => row.startsWith('session_id='));
+					if (!sessionId) {
+						sessionId = generateUUID();
+						const expires = new Date();
+						expires.setDate(expires.getDate() + 30);
+						document.cookie = `session_id=${sessionId}; path=/; expires=${expires.toUTCString()}; SameSite=Lax`;
+						return sessionId;
+					}
+					return sessionId.split('=')[1];
+				}
+				
+				// Initialize session on page load
+				document.addEventListener('DOMContentLoaded', function() {
+					getSessionId();
+					
+					// Configure HTMX to include credentials (cookies) in requests
+					// This is the default behavior, but we're being explicit
+					document.body.addEventListener('htmx:configRequest', function(evt) {
+						evt.detail.headers['X-Session-ID'] = getSessionId(); // Optional: also send as header
+					});
+				});
+			</script>
 			<style>
 				.nav-link {
 					@apply text-gray-700 hover:text-gray-900 font-medium transition-colors;

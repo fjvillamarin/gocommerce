@@ -10,15 +10,39 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
-// In-memory cart for demo purposes
-var cart = models.Cart{Items: []models.CartItem{}}
+// Handlers holds all the dependencies for HTTP handlers
+type Handlers struct {
+	cartService *models.CartService
+}
 
-func HomeHandler(w http.ResponseWriter, r *http.Request) {
-	component := templates.Home(models.Products, cart.GetItemCount())
+// NewHandlers creates a new Handlers instance with dependencies
+func NewHandlers(cartService *models.CartService) *Handlers {
+	return &Handlers{
+		cartService: cartService,
+	}
+}
+
+// getSessionID extracts the session ID from cookies
+func getSessionID(r *http.Request) string {
+	cookie, err := r.Cookie("session_id")
+	if err != nil || cookie.Value == "" {
+		// This shouldn't happen if our JS is working, but provide a fallback
+		return "default-session"
+	}
+	return cookie.Value
+}
+
+func (h *Handlers) HomeHandler(w http.ResponseWriter, r *http.Request) {
+	sessionID := getSessionID(r)
+	cartCount := h.cartService.GetItemCount(sessionID)
+	component := templates.Home(models.Products, cartCount)
 	component.Render(r.Context(), w)
 }
 
-func ProductHandler(w http.ResponseWriter, r *http.Request) {
+func (h *Handlers) ProductHandler(w http.ResponseWriter, r *http.Request) {
+	sessionID := getSessionID(r)
+	cartCount := h.cartService.GetItemCount(sessionID)
+
 	idStr := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
@@ -32,16 +56,20 @@ func ProductHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	component := templates.ProductDetail(*product, cart.GetItemCount())
+	component := templates.ProductDetail(*product, cartCount)
 	component.Render(r.Context(), w)
 }
 
-func CartHandler(w http.ResponseWriter, r *http.Request) {
-	component := templates.Cart(cart)
+func (h *Handlers) CartHandler(w http.ResponseWriter, r *http.Request) {
+	sessionID := getSessionID(r)
+	cart := h.cartService.GetCart(sessionID)
+	component := templates.Cart(*cart)
 	component.Render(r.Context(), w)
 }
 
-func AddToCartHandler(w http.ResponseWriter, r *http.Request) {
+func (h *Handlers) AddToCartHandler(w http.ResponseWriter, r *http.Request) {
+	sessionID := getSessionID(r)
+
 	idStr := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
@@ -57,7 +85,7 @@ func AddToCartHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Parse form data
 	r.ParseForm()
-	
+
 	// Get form data
 	quantity, _ := strconv.Atoi(r.FormValue("quantity"))
 	if quantity <= 0 {
@@ -67,16 +95,17 @@ func AddToCartHandler(w http.ResponseWriter, r *http.Request) {
 	size := r.FormValue("size")
 
 	// Debug log
-	fmt.Printf("Adding to cart: Product=%s, Quantity=%d, Color=%s, Size=%s\n", product.Name, quantity, color, size)
+	fmt.Printf("Session %s - Adding to cart: Product=%s, Quantity=%d, Color=%s, Size=%s\n", sessionID, product.Name, quantity, color, size)
 
-	cart.AddItem(*product, quantity, color, size)
+	h.cartService.AddItem(sessionID, *product, quantity, color, size)
 
 	// Check if this is an HTMX request
 	if r.Header.Get("HX-Request") == "true" {
 		// Return just the updated cart badge for HTMX
 		w.Header().Set("Content-Type", "text/html")
-		if cart.GetItemCount() > 0 {
-			badge := fmt.Sprintf(`<span class="absolute -top-2 -right-2 bg-blue-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center" id="cart-count">%d</span>`, cart.GetItemCount())
+		cartCount := h.cartService.GetItemCount(sessionID)
+		if cartCount > 0 {
+			badge := fmt.Sprintf(`<span class="absolute -top-2 -right-2 bg-blue-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center" id="cart-count">%d</span>`, cartCount)
 			w.Write([]byte(badge))
 		}
 	} else {
@@ -85,7 +114,9 @@ func AddToCartHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func UpdateCartItemHandler(w http.ResponseWriter, r *http.Request) {
+func (h *Handlers) UpdateCartItemHandler(w http.ResponseWriter, r *http.Request) {
+	sessionID := getSessionID(r)
+
 	idStr := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
@@ -94,32 +125,24 @@ func UpdateCartItemHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	action := chi.URLParam(r, "action")
+	h.cartService.UpdateQuantity(sessionID, id, action)
 
-	// Find the item in cart
-	for i, item := range cart.Items {
-		if item.Product.ID == id {
-			if action == "increase" {
-				cart.Items[i].Quantity++
-			} else if action == "decrease" && item.Quantity > 1 {
-				cart.Items[i].Quantity--
-			} else if action == "decrease" && item.Quantity == 1 {
-				cart.RemoveItem(id, item.Color, item.Size)
-			}
-			break
-		}
-	}
+	// Get updated cart
+	cart := h.cartService.GetCart(sessionID)
 
 	// Return both cart content and order summary
 	w.Header().Set("Content-Type", "text/html")
-	
+
 	// Send both components
-	templates.CartContent(cart).Render(r.Context(), w)
+	templates.CartContent(*cart).Render(r.Context(), w)
 	w.Write([]byte(`<div id="order-summary-wrapper" hx-swap-oob="true">`))
-	templates.OrderSummary(cart).Render(r.Context(), w)
+	templates.OrderSummary(*cart).Render(r.Context(), w)
 	w.Write([]byte(`</div>`))
 }
 
-func RemoveCartItemHandler(w http.ResponseWriter, r *http.Request) {
+func (h *Handlers) RemoveCartItemHandler(w http.ResponseWriter, r *http.Request) {
+	sessionID := getSessionID(r)
+
 	idStr := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
@@ -127,25 +150,24 @@ func RemoveCartItemHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Find and remove the item
-	for _, item := range cart.Items {
-		if item.Product.ID == id {
-			cart.RemoveItem(id, item.Color, item.Size)
-			break
-		}
-	}
+	h.cartService.RemoveItem(sessionID, id)
+
+	// Get updated cart
+	cart := h.cartService.GetCart(sessionID)
 
 	// Return both cart content and order summary
 	w.Header().Set("Content-Type", "text/html")
-	
+
 	// Send both components
-	templates.CartContent(cart).Render(r.Context(), w)
+	templates.CartContent(*cart).Render(r.Context(), w)
 	w.Write([]byte(`<div id="order-summary-wrapper" hx-swap-oob="true">`))
-	templates.OrderSummary(cart).Render(r.Context(), w)
+	templates.OrderSummary(*cart).Render(r.Context(), w)
 	w.Write([]byte(`</div>`))
 }
 
-func CheckoutHandler(w http.ResponseWriter, r *http.Request) {
-	component := templates.Checkout(cart)
+func (h *Handlers) CheckoutHandler(w http.ResponseWriter, r *http.Request) {
+	sessionID := getSessionID(r)
+	cart := h.cartService.GetCart(sessionID)
+	component := templates.Checkout(*cart)
 	component.Render(r.Context(), w)
 }
