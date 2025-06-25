@@ -171,3 +171,17 @@ func (h *Handlers) CheckoutHandler(w http.ResponseWriter, r *http.Request) {
 	component := templates.Checkout(*cart)
 	component.Render(r.Context(), w)
 }
+
+// CartCountHandler returns just the cart badge for lazy loading
+func (h *Handlers) CartCountHandler(w http.ResponseWriter, r *http.Request) {
+	sessionID := getSessionID(r)
+
+	// DEMO: Uncomment to simulate slow cart service
+	// time.Sleep(3 * time.Second)
+
+	cartCount := h.cartService.GetItemCount(sessionID)
+
+	w.Header().Set("Content-Type", "text/html")
+	component := templates.CartBadgeContent(cartCount)
+	component.Render(r.Context(), w)
+}

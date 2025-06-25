@@ -31,6 +31,9 @@ func main() {
 	r.Post("/cart/add/{id}", h.AddToCartHandler)
 	r.Patch("/cart/item/{id}/{action}", h.UpdateCartItemHandler)
 	r.Delete("/cart/item/{id}", h.RemoveCartItemHandler)
+	
+	// API endpoints
+	r.Get("/api/cart-count", h.CartCountHandler)
 
 	log.Println("Server starting on :8080")
 	http.ListenAndServe(":8080", r)

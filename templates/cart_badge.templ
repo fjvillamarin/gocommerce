@@ -1,0 +1,42 @@
+package templates
+
+import (
+	"strconv"
+)
+
+// CartBadgeSSR - Server-side rendered cart badge
+// This version blocks page rendering until cart count is retrieved
+templ CartBadgeSSR(cartCount int) {
+	<div id="cart-badge">
+		if cartCount > 0 {
+			<span class="absolute -top-2 -right-2 bg-blue-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center" id="cart-count">
+				{ strconv.Itoa(cartCount) }
+			</span>
+		}
+	</div>
+}
+
+// CartBadgeLazy - Client-side loaded cart badge using HTMX
+// This version renders immediately with a placeholder and loads the count asynchronously
+templ CartBadgeLazy() {
+	<div 
+		id="cart-badge"
+		hx-get="/api/cart-count"
+		hx-trigger="load"
+		hx-swap="innerHTML"
+	>
+		// Loading placeholder - shows while fetching
+		<span class="absolute -top-2 -right-2 bg-gray-400 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center animate-pulse">
+			...
+		</span>
+	</div>
+}
+
+// CartBadgeContent - The actual badge content returned by the API
+templ CartBadgeContent(cartCount int) {
+	if cartCount > 0 {
+		<span class="absolute -top-2 -right-2 bg-blue-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center" id="cart-count">
+			{ strconv.Itoa(cartCount) }
+		</span>
+	}
+}

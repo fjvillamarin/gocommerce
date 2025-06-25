@@ -2,7 +2,6 @@ package models
 
 import (
 	"sync"
-	"time"
 )
 
 // CartService manages shopping carts for multiple sessions
@@ -80,11 +79,9 @@ func (cs *CartService) RemoveItem(sessionID string, productID int) bool {
 
 // GetItemCount returns the total item count for a session's cart
 func (cs *CartService) GetItemCount(sessionID string) int {
+	// time.Sleep(10 * time.Second)
+
 	cart := cs.GetCart(sessionID)
-
-	// Delay of 1 second
-	time.Sleep(10 * time.Second)
-
 	return cart.GetItemCount()
 }
 
