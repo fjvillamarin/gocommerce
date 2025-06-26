@@ -1,0 +1,35 @@
+[tools]
+go = "1.23.0"
+
+[tasks.install-tools]
+description = "Install Air and Templ"
+run = """
+  echo "Installing Air..."
+  go install github.com/air-verse/air@v1.61.0
+  echo "Installing Templ..."
+  go install github.com/a-h/templ/cmd/templ@latest
+  echo "Tools installed successfully!"
+"""
+
+[tasks.templ-watch]
+description = "Watch and generate Templ files"
+run = "templ generate --watch"
+
+[tasks.server]
+description = "Run the Go server"
+run = "go run ."
+
+[tasks.dev]
+description = "Run development server with Air (auto-reload)"
+run = "air"
+
+[tasks.setup]
+description = "Initial setup - install tools and initialize Air config"
+run = """
+  mise run install-tools
+  if [ ! -f .air.toml ]; then
+    echo "Initializing Air configuration..."
+    air init
+  fi
+  echo "Setup complete! Run 'mise run dev' to start the development server."
+"""
