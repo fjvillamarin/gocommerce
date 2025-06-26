@@ -1,9 +1,19 @@
 package templates
 
 import (
+	"encoding/json"
 	"fmt"
 	"gocommerce/models"
 )
+
+// ProductPageData represents the Alpine.js data structure for the product page
+type ProductPageData struct {
+	Quantity      int      `json:"quantity"`
+	SelectedColor string   `json:"selectedColor"`
+	SelectedSize  string   `json:"selectedSize"`
+	ActiveImage   int      `json:"activeImage"`
+	Images        []string `json:"images"`
+}
 
 templ ProductDetail(product models.Product, cartCount int) {
 	@Layout(product.Name) {
@@ -19,18 +29,22 @@ templ ProductDetail(product models.Product, cartCount int) {
 		</div>
 
 		// Product Detail with Alpine.js
-		<div class="max-w-7xl mx-auto px-6 py-8" x-data={`{
-			quantity: 1,
-			selectedColor: '` + product.Colors[0] + `',
-			selectedSize: '` + product.Sizes[0] + `',
-			activeImage: 0,
-			images: [
-				'` + product.Image + `',
-				'https://images.pexels.com/photos/125779/pexels-photo-125779.jpeg?auto=compress&cs=tinysrgb&w=200',
-				'https://images.pexels.com/photos/280250/pexels-photo-280250.jpeg?auto=compress&cs=tinysrgb&w=200',
-				'https://images.pexels.com/photos/1697214/pexels-photo-1697214.jpeg?auto=compress&cs=tinysrgb&w=200'
-			]
-		}`}>
+		<div class="max-w-7xl mx-auto px-6 py-8" x-data={func() string {
+			data := ProductPageData{
+				Quantity:      1,
+				SelectedColor: product.Colors[0],
+				SelectedSize:  product.Sizes[0],
+				ActiveImage:   0,
+				Images: []string{
+					product.Image,
+					"https://images.pexels.com/photos/125779/pexels-photo-125779.jpeg?auto=compress&cs=tinysrgb&w=200",
+					"https://images.pexels.com/photos/280250/pexels-photo-280250.jpeg?auto=compress&cs=tinysrgb&w=200",
+					"https://images.pexels.com/photos/1697214/pexels-photo-1697214.jpeg?auto=compress&cs=tinysrgb&w=200",
+				},
+			}
+			jsonData, _ := json.Marshal(data)
+			return string(jsonData)
+		}()}>
 			<div class="grid grid-cols-2 gap-12">
 				// Product Images with Alpine.js gallery
 				<div class="space-y-4">

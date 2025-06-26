@@ -106,10 +106,10 @@ templ Navigation(cartCount int) {
 							</svg>
 							
 							// Server-Side Rendered version - cart count loaded during page render
-							// @CartBadgeSSR(cartCount)
+							@CartBadgeSSR(cartCount)
 							
 							// Client-Side Lazy Loading version - cart count loaded after page render
-							@CartBadgeLazy()
+							// @CartBadgeLazy()
 						</div>
 						<span class="font-medium text-gray-700 group-hover:text-gray-900">Cart</span>
 					</a>
